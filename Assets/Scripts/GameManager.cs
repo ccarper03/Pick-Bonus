@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     private Text denoLbl;
 
     private float lastGameWin;
-    private float balance;
+    private float balance = 10.00f;
     private int denoIndex = 0;
     private float[] denoAmt = { .25f, .50f, 1.00f, 5.00f };
     // Start is called before the first frame update
@@ -22,6 +22,7 @@ public class GameManager : Singleton<GameManager>
     {
         denoIndex = 0;
         denoLbl.text = "$" + denoAmt[denoIndex].ToString();
+        banlanceLbl.text = "$" + balance.ToString();
     }
 
     // Update is called once per frame
