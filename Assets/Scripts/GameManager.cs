@@ -56,9 +56,20 @@ public class GameManager : Singleton<GameManager>
     }
     public void Play()
     {
+        // play button must be greyed out during play
+        // Last Game Win Ready out must be 0.00 out on every play
+        // Chests are pickable after pressing play
+            // when picked
+                // show open chest
+                // display money in that chest (if any)
+                // Add money to the running total (last game win)
+                // Become no longer clickable
+        // After Pooper is picked, add the total won to the current balance
+        // on play press reset the Chest visuals
+ 
+        
         if (denoAmt[denoIndex] <= currentBalance) // Check if you have enough in balance for Denomination amount
         {
-            
             float randNum = Random.value;
             if (randNum <= .5f)// 50%
             {
@@ -69,6 +80,7 @@ public class GameManager : Singleton<GameManager>
                 // Calculate the values
 
                 // Output the results
+                Debug.Log(" Denominator: " + denominator + " Current Balance: " + currentBalance);
                 LastGameWinLbl.text = "$0.00";
                 banlanceLbl.text = (currentBalance -= denominator).ToString("C");
             }
@@ -85,6 +97,7 @@ public class GameManager : Singleton<GameManager>
                 currentBalance += winningTotal;
 
                 // Output the results
+                Debug.Log("Mulitplyer: " + multiplier + " Denominator: " + denominator + " Winning Total: " + winningTotal + " Current Balance: " + currentBalance);
                 banlanceLbl.text = currentBalance.ToString("C");
                 LastGameWinLbl.text = winningTotal.ToString("C");
 
@@ -102,6 +115,7 @@ public class GameManager : Singleton<GameManager>
                 currentBalance += winningTotal;
 
                 // Output the results
+                Debug.Log("Mulitplyer: " + multiplier + " Denominator: " + denominator + " Winning Total: " + winningTotal + " Current Balance: " + currentBalance);
                 banlanceLbl.text = currentBalance.ToString("C");
                 LastGameWinLbl.text = winningTotal.ToString("C");
             }
@@ -118,12 +132,52 @@ public class GameManager : Singleton<GameManager>
                 currentBalance += winningTotal;
 
                 // Output the results
+                Debug.Log("Mulitplyer: "+ multiplier + " Denominator: " + denominator + " Winning Total: " + winningTotal + " Current Balance: " + currentBalance);
                 banlanceLbl.text = currentBalance.ToString("C");
                 LastGameWinLbl.text = winningTotal.ToString("C");
             }
         }
-    }
 
+        decimal[] dividedChestWinningsArr = new decimal[8];
+        decimal howmuchmoneywon = (decimal)winningTotal;
+        //int random = Random.Range(0, dividedChestWinningsArr.Length); // can only divide total winnings if we won 
+        decimal numb = 0m;
+        for (int i = 0; i < dividedChestWinningsArr.Length; i++)
+        {
+            bool isNotMultipleOfFiveCents =  true;
+            while (isNotMultipleOfFiveCents)
+            {
+                numb = decimal.Round(howmuchmoneywon / Random.Range(4, 8), 2);
+                if (numb % .05m == 0)
+                {
+                    isNotMultipleOfFiveCents = false;
+                }
+
+            }
+            Debug.Log(numb);
+
+            if (i == 7)
+            {
+                dividedChestWinningsArr[i] = howmuchmoneywon;
+            }
+            else
+            {
+                dividedChestWinningsArr[i] = numb;
+                howmuchmoneywon -= numb;
+            }
+        }
+        Debug.Log("$$$$$$$$$$$$$$$$$$$$");
+        foreach (var winnings in dividedChestWinningsArr)
+        {
+            //Debug.Log("Winnings Divided: " + winnings.ToString("C"));
+            Debug.Log(string.Format("{0:C2}", winnings));
+        }
+        Debug.Log("$$$$$$$$$$$$$$$$$$$$");
+        // figure out a way to split up total amounts won into smaller amounts (8)
+        // reserve 1 for the pooper chest
+        // win amounts should be no less then $0.05 increments
+    }
+    
     // Add Denomination Button
     public void DenominatorIncrease()
     {
