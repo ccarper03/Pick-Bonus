@@ -4,7 +4,6 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
-using UnityEngine.UIElements;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -18,6 +17,8 @@ public class GameManager : Singleton<GameManager>
 
     private float lastGameWin;
     [SerializeField]
+    private Button playBtn;
+
     private float currentBalance = 10.00f;
     private int denoIndex = 0;
     private float[] denoAmt = { .25f, .50f, 1.00f, 5.00f };
@@ -40,12 +41,24 @@ public class GameManager : Singleton<GameManager>
         denoIndex = 0;
         denoLbl.text = denoAmt[denoIndex].ToString("C");
         banlanceLbl.text = currentBalance.ToString("C");
+        playBtn.interactable = true;
     }
-
+    private void Update()
+    {
+        if (denoAmt[denoIndex] <= currentBalance)
+        {
+            playBtn.interactable = true;
+        }
+        else
+        {
+            playBtn.interactable = false;
+        }
+    }
     public void Play()
     {
         if (denoAmt[denoIndex] <= currentBalance) // Check if you have enough in balance for Denomination amount
         {
+            
             float randNum = Random.value;
             if (randNum <= .5f)// 50%
             {
@@ -108,10 +121,6 @@ public class GameManager : Singleton<GameManager>
                 banlanceLbl.text = currentBalance.ToString("C");
                 LastGameWinLbl.text = winningTotal.ToString("C");
             }
-        }
-        else
-        {
-            
         }
     }
 
