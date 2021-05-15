@@ -55,4 +55,9 @@ public class Chest : MonoBehaviour
             Debug.Log("open extra");
         }
     }
+    public void ResetChest()
+    {
+        this.GetComponent<Button>().interactable = false;
+        chestImage.sprite = closed;
+    }
 }

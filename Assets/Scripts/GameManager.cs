@@ -7,27 +7,25 @@ using UnityEngine.Assertions;
 
 public class GameManager : Singleton<GameManager>
 {
-    
-    [SerializeField]
-    private Text LastGameWinLbl;
-    [SerializeField]
-    private Text banlanceLbl;
-    [SerializeField]
-    private Text denoLbl;
+    [SerializeField] private Text LastGameWinLbl;
+    [SerializeField] private Text banlanceLbl;
+    [SerializeField] private Text denoLbl;
+    [SerializeField] private Button playBtn;
+    [SerializeField] private Button DenoSubBtn;
+    [SerializeField] private Button DenoAddBtn;
 
-    private float lastGameWin;
-    [SerializeField]
-    private Button playBtn;
-
+    private bool isChestPickable = false;
     private float currentBalance = 10.00f;
     private int denoIndex = 0;
     private float[] denoAmt = { .25f, .50f, 1.00f, 5.00f };
     private float denominator;
     private float winningTotal;
-    private int multiplier;    
+    private int multiplier;
+    private float lastGameWin;
     private int[] winMultiplyerOnes = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     private int[] winMultiplyerTens = { 12, 16, 24, 32, 48, 64 };
     private int[] winMultiplyerHundreds = { 100, 200, 300, 400, 500 };
+
     private AudioSource audioSource;
     public AudioSource AudioSource
     {
@@ -42,6 +40,11 @@ public class GameManager : Singleton<GameManager>
         denoLbl.text = denoAmt[denoIndex].ToString("C");
         banlanceLbl.text = currentBalance.ToString("C");
         playBtn.interactable = true;
+        DenoSubBtn.interactable = true;
+        DenoAddBtn.interactable = true;
+        isChestPickable = false;
+        ChestManager.Instance.CloseAllChests();
+        ChestManager.Instance.DisableAllChests();
     }
     private void Update()
     {
@@ -56,18 +59,24 @@ public class GameManager : Singleton<GameManager>
     }
     public void Play()
     {
-        // play button must be greyed out during play
-        // Last Game Win Ready out must be 0.00 out on every play
+        playBtn.interactable = false;
+        DenoSubBtn.interactable = false;
+        DenoAddBtn.interactable = false;
+        LastGameWinLbl.text = "$0.00";
+
+        ChestManager.Instance.CloseAllChests();
+        ChestManager.Instance.DisableAllChests();
+
         // Chests are pickable after pressing play
-            // when picked
-                // show open chest
-                // display money in that chest (if any)
-                // Add money to the running total (last game win)
-                // Become no longer clickable
+        // when picked
+        // show open chest
+        // display money in that chest (if any)
+        // Add money to the running total (last game win)
+        // Become no longer clickable
         // After Pooper is picked, add the total won to the current balance
         // on play press reset the Chest visuals
- 
-        
+
+
         if (denoAmt[denoIndex] <= currentBalance) // Check if you have enough in balance for Denomination amount
         {
             float randNum = Random.value;
@@ -176,8 +185,22 @@ public class GameManager : Singleton<GameManager>
         // figure out a way to split up total amounts won into smaller amounts (8)
         // reserve 1 for the pooper chest
         // win amounts should be no less then $0.05 increments
+
+        isChestPickable = true;
+        // Can click on chests
+            // show open chest
+            // display money in that chest
+            // add money
+            // no longer clickable
+
+        // after pooper is found diable all the chests
+
+        isChestPickable = false; // close and disable all the chests
+        playBtn.interactable = true;
+        DenoSubBtn.interactable = true;
+        DenoAddBtn.interactable = true;
     }
-    
+
     // Add Denomination Button
     public void DenominatorIncrease()
     {
